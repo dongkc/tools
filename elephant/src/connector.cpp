@@ -52,6 +52,7 @@ class ServiceHandler
   void onWritable(const AutoPtr<WritableNotification>& notification)
   {
     string request = "Hello, World!";
+    cout << "sending out";
     _socket.sendBytes(request.c_str(), request.length());
   }
 
