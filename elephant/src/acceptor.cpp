@@ -22,6 +22,9 @@ public:
 
   ServiceHandler(StreamSocket socket, SocketReactor& reactor) : _socket(socket), _reactor(reactor)
   {
+    LOG(INFO)<< "ServiceHandler::ServiceHander(): client accepted" << endl;
+    _reactor.addEventHandler(_socket, NObserver<ServiceHandler, ReadableNotification>(*this, &ServiceHandler::onReadable));
+    _reactor.addEventHandler(_socket, NObserver<ServiceHandler, WritableNotification>(*this, &ServiceHandler::onWritable));
   }
 
   void onReadable(const AutoPtr<ReadableNotification>& notification)
@@ -64,37 +67,11 @@ public:
   string _request;
 };
 
-
-class ServiceInitializer
-{
-public:
-
-  ServiceInitializer(StreamSocket& socket, SocketReactor& reactor) : _socket(socket), _reactor(reactor)
-  {
-    LOG(INFO)<< "ServiceInitializer::ServiceInitializer(): client accepted" << endl;
-    ServiceHandler* handler = new ServiceHandler(_socket, _reactor);
-    _reactor.addEventHandler(_socket, NObserver<ServiceHandler, ReadableNotification>(*handler, &ServiceHandler::onReadable));
-    _reactor.addEventHandler(_socket, NObserver<ServiceHandler, WritableNotification>(*handler, &ServiceHandler::onWritable));
-  }
-
-  ~ServiceInitializer()
-  {
-    LOG(INFO) << "ServiceInitializer::~ServiceInitializer():" << endl;
-  }
-
-  private:
-
-  StreamSocket _socket;
-
-  SocketReactor& _reactor;
-};
-
-
 int main()
 {
   ServerSocket socket(9000);
   SocketReactor reactor(Timespan(0, 0, 0, 1, 0));
-  SocketAcceptor<ServiceInitializer> acceptor(socket, reactor);
+  SocketAcceptor<ServiceHandler> acceptor(socket, reactor);
 
   Thread thread;
   thread.start(reactor);
