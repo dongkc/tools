@@ -58,12 +58,9 @@ public:
     }
   }
 
-  private:
-
+private:
   StreamSocket _socket;
-
   SocketReactor& _reactor;
-
   string _request;
 };
 
