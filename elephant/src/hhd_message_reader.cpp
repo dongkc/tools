@@ -152,7 +152,7 @@ bool HHDMessageReader::parse(LockMessage* message)
 
 bool HHDMessageReader::parse_register_message(LockMessage* message)
 {
-  //TODO: get info from register message
+  //TODO: 从锁的消息里面获取制造商，型号，序列号等信息
   message->maker_     = "HHD";
   message->module_    = "0000";
   message->serial_id_ = "0000";

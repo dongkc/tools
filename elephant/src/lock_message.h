@@ -3,16 +3,17 @@
 
 #include <stdint.h>
 #include <string>
+#include <vector>
 
-#define JT808_TEID_LEN				6
+#define JT808_TEID_LEN        6
 
 enum {
   CONSOLE_REPORT = 1,
   CONSOLE_REPORT_SEAL,
   CONSOLE_REPORT_UNSEAL,
   CONSOLE_REPORT_GET_ICNUM,
-  CONSOLE_REPORT_GET_SEALS,
   CONSOLE_REPORT_SET_ICNUM,
+  CONSOLE_REPORT_GET_SEALS,
   CONSOLE_REPORT_SET_SEALS,
   CONSOLE_REPORT_SET_INTERVAL,
   CONSOLE_REPORT_GET_INTERVAL,
@@ -24,7 +25,7 @@ enum {
 
 struct LockMessage
 {
-	uint16_t      id_;
+  uint16_t      id_;
   unsigned char lock_id_[6];
   uint16_t      sequence_num_;
 
@@ -54,7 +55,7 @@ struct LockMessage
   // other
   uint16_t      response_id_;
 
-  // register
+  // 注册
   std::string   maker_;
   std::string   module_;
   std::string   serial_id_;
@@ -63,7 +64,7 @@ struct LockMessage
   // platform response result
   unsigned char platform_result_;
 
-  // auth
+  // 鉴权
   std::string   code_;
 };
 #endif
