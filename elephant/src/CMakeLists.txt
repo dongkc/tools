@@ -1,5 +1,8 @@
 ADD_EXECUTABLE(acceptor
-  acceptor.cpp)
+  acceptor.cpp
+  hhd_message_writer.cpp
+  hhd_message_reader.cpp
+  )
 
 TARGET_LINK_LIBRARIES(acceptor
   PocoFoundation
