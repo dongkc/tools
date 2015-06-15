@@ -4,3 +4,4 @@ build/
 .*
 rabbit.h
 rabbit.cpp
+*.user
