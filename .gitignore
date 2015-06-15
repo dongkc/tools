@@ -2,3 +2,5 @@ cscope*
 build/
 *.pyc
 .*
+rabbit.h
+rabbit.cpp
