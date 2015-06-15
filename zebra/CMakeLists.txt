@@ -7,7 +7,7 @@ PROJECT(zebra)
 
 INCLUDE_DIRECTORIES(src)
 INCLUDE_DIRECTORIES(/usr/include/apr-1)
-INCLUDE_DIRECTORIES(/usr/local/include/activemq-cpp-3.8.3)
+INCLUDE_DIRECTORIES(/usr/local/include/activemq-cpp-3.8.2)
 LINK_DIRECTORIES(/usr/local/lib)
 
 ADD_SUBDIRECTORY(src)

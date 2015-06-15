@@ -8,7 +8,7 @@ using namespace cms;
 
 CommandMessageListener::CommandMessageListener()
   :
-   brokerURI("tcp://192.168.27.13:61616"),
+   brokerURI("tcp://192.168.27.21:61616"),
    useTopic(true),
    sessionTransacted(false),
    destName("nuctech.gpsSeventTopic"),
