@@ -5,3 +5,8 @@ build/
 rabbit.h
 rabbit.cpp
 *.user
+net_mgr.cpp
+net_mgr.h
+pelican.cpp
+pelican.h
+build*
