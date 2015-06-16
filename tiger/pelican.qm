@@ -424,12 +424,24 @@ BSP_signalPeds(PEDS_BLANK);</action>
    </operation>
    <statechart>
     <initial target="../1">
+     <action>QS_OBJ_DICTIONARY(&amp;g_net_mgr);
+QS_OBJ_DICTIONARY(&amp;g_net_mgr.m_timeout);
+</action>
      <initial_glyph conn="2,4,5,1,40,4,-2">
       <action box="0,-2,10,2"/>
      </initial_glyph>
     </initial>
     <state name="active">
-     <state_glyph node="2,6,38,50"/>
+     <entry>me-&gt;m_timeout.armX(BSP_TICKS_PER_SEC, BSP_TICKS_PER_SEC);</entry>
+     <tran trig="TIMEOUT">
+      <action>qDebug(&quot;-----------------&quot;);</action>
+      <tran_glyph conn="2,12,3,-1,32">
+       <action box="0,-2,23,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="2,6,38,50">
+      <entry box="1,2,6,2"/>
+     </state_glyph>
     </state>
     <state_diagram size="88,59"/>
    </statechart>
