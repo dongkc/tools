@@ -46,12 +46,14 @@ SOURCES += \
     main.cpp \
     gui.cpp \
     bsp.cpp \
-    pelican.cpp
+    pelican.cpp \
+    net_mgr.cpp
 
 HEADERS += \
     gui.h \
     bsp.h \
-    pelican.h
+    pelican.h \
+    net_mgr.h
 
 FORMS += gui.ui
 

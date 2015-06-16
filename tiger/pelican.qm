@@ -416,37 +416,42 @@ BSP_signalPeds(PEDS_BLANK);</action>
     <state_diagram size="76,99"/>
    </statechart>
   </class>
+  <class name="NetMgr" superclass="qpcpp::QMActive">
+   <attribute name="m_timeout" type="QP::QTimeEvt" visibility="0x02" properties="0x00"/>
+   <operation name="NetMgr" type="" visibility="0x00" properties="0x02">
+    <code> : QMActive(Q_STATE_CAST(&amp;NetMgr::initial)),
+   m_timeout(this, TIMEOUT_SIG)</code>
+   </operation>
+   <statechart>
+    <initial target="../1">
+     <initial_glyph conn="7,4,5,0,13,4">
+      <action box="0,-2,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="state1">
+     <state_glyph node="3,8,33,26"/>
+    </state>
+    <state_diagram size="80,50"/>
+   </statechart>
+  </class>
   <attribute name="AO_Pelican" type="QP::QMActive * const" visibility="0x00" properties="0x00"/>
+  <attribute name="AO_net_mgr" type="QP::QMActive * const" visibility="0x00" properties="0x00"/>
  </package>
  <directory name=".">
-  <file name="pelican.h">
+  <file name="pelican.h" codec="UTF-8">
    <text>#ifndef pelican_h
 #define pelican_h
 
-namespace PELICAN {
-
-enum PelicanSignals {
-    PEDS_WAITING_SIG = QP::Q_USER_SIG,
-    TERMINATE_SIG,
-    MAX_PUB_SIG, // the last published signal
-
-    ON_SIG,
-    OFF_SIG,
-    TIMEOUT_SIG,
-
-    MAX_SIG   // keep always last
-};
-
-} // namespace PELICAN
 
 // active objects ..................................................
 $declare(components::AO_Pelican)  // opaque pointer to Pelican AO
 
 #endif // pelican_h</text>
   </file>
-  <file name="pelican.cpp">
+  <file name="pelican.cpp" codec="UTF-8">
    <text>#include &quot;qp_port.h&quot;
 #include &quot;bsp.h&quot;
+#include &quot;common.h&quot;
 #include &quot;pelican.h&quot;
 
 Q_DEFINE_THIS_FILE
@@ -475,6 +480,58 @@ QP::QMActive * const AO_Pelican = &amp;l_Pelican; // the opaque pointer
 
 // Pelican class definition --------------------------------------------------
 $define(components::Pelican)</text>
+  </file>
+  <file name="net_mgr.h" codec="UTF-8">
+   <text>#ifndef NET_MGR_H
+#define NET_MGR_H
+
+$declare(components::AO_net_mgr)
+#endif</text>
+  </file>
+  <file name="net_mgr.cpp" codec="UTF-8">
+   <text>#include &quot;qp_port.h&quot;
+#include &quot;bsp.h&quot;
+#include &quot;common.h&quot;
+#include &quot;net_mgr.h&quot;
+
+Q_DEFINE_THIS_FILE
+
+$declare(components::NetMgr)
+
+namespace PELICAN {
+
+static NetMgr g_net_mgr;
+
+// Global objects ------------------------------------------------------------
+QP::QMActive * const AO_net_mgr = &amp;g_net_mgr; // the opaque pointer
+
+} // namespace PELICAN
+
+
+
+$define(components::NetMgr)</text>
+  </file>
+  <file name="common.h" codec="UTF-8">
+   <text>#ifndef COMMON_H
+#define COMMON_H
+
+namespace PELICAN {
+
+enum PelicanSignals {
+    PEDS_WAITING_SIG = QP::Q_USER_SIG,
+    TERMINATE_SIG,
+    MAX_PUB_SIG, // the last published signal
+
+    ON_SIG,
+    OFF_SIG,
+    TIMEOUT_SIG,
+
+    MAX_SIG   // keep always last
+};
+
+}
+
+#endif</text>
   </file>
  </directory>
 </model>

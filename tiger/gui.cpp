@@ -36,6 +36,7 @@
 #include "gui.h"
 //-----------------
 #include "qp_port.h"
+#include "common.h"
 #include "pelican.h"
 #include "bsp.h"
 

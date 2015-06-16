@@ -34,7 +34,9 @@
 #include "gui.h"
 //-----------------
 #include "qp_port.h"
+#include "common.h"
 #include "pelican.h"
+#include "net_mgr.h"
 #include "bsp.h"
 
 //............................................................................
@@ -44,6 +46,8 @@ static QF_MPOOL_EL(QP::QEvt) l_smlPoolSto[20]; // storage for small event pool
 
 //............................................................................
 int main(int argc, char *argv[]) {
+  static QP::QEvt const * net_queue[10000];
+
     QP::GuiApp app(argc, argv);
     Gui gui;
 
@@ -66,6 +70,10 @@ int main(int argc, char *argv[]) {
     PELICAN::AO_Pelican->start(1U,
                  (QP::QEvt const **)0, 0U, // no queue
                  (void *)0, 0U);           // no stack
+
+    PELICAN::AO_net_mgr->start(2U,
+                         net_queue, Q_DIM(net_queue),
+                         static_cast<void *>(0), 0U);
 
     return QP::QF::run(); // calls qApp->exec()
 }
