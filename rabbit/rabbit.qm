@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model version="3.3.0">
+ <documentation>PEdestrian LIghto CONtrolled (PELICA) crossing for Qt with GUI</documentation>
+ <framework name="qpcpp"/>
+ <package name="Qt-port" stereotype="0x00" namespace="QP::">
+  <class name="GuiQActive" superclass="qpcpp::QActive">
+   <operation name="GuiQActive" type="QActive(initial)" visibility="0x00" properties="0x00">
+    <parameter name="initial" type="QStateHandler"/>
+   </operation>
+   <operation name="start" type="void" visibility="0x00" properties="0x00">
+    <documentation>Starts execution of an active object and registers the object with the framework. This function is strongly OS-dependent and must be defined in the QP port to a particular platform.
+
+The function takes six arguments:
+
+'prio' is the priority of the active object. QP allows you to start up to 63 active objects, each one having a *unique* priority number between 1 and 63 inclusive, where higher numerical values correspond to higher priority (urgency) of the active object relative to the others.
+
+'qSto[]' and 'qLen' arguments are the storage and size of the event queue used by this active object.
+
+'stkSto' and 'stkSize' are the stack storage and size in bytes. Please note that a per-active object stack is used only when the underlying OS requies it. If the stack is not required, or the underlying OS allocates the stack internally, the stkSto should be NULL and/or stkSize should be 0.
+
+'ie' is an optional initialization event that can be used to pass additional startup data to the active object. (Pass NULL if your active object does not expect the initialization event).</documentation>
+    <parameter name="prio" type="uint8_t"/>
+    <parameter name="qSto[]" type="QEvt const *"/>
+    <parameter name="qLen" type="uint32_t"/>
+    <parameter name="stkSto" type="void *"/>
+    <parameter name="stkSize" type="uint32_t"/>
+    <parameter name="ie" type="QEvt const *"/>
+    <code>// Example:
+
+static Table l_table;   // Table active object instance
+static QEvt const *l_tableQueueSto[N]; // storage for Table queue
+static int l_tableStk[256]; // storage for the stack for Table AO
+. . .
+int main() {
+    TableEvt ie;            // initialization event for the Table AO
+    . . .
+    ie.philNum = n;         // build the initialization event
+    . . .
+    l_table.start(
+        6,                     // unique priority (1..QF_MAX_ACTIVE)
+        l_tableQueueSto,       // event queue of the active object
+        Q_DIM(l_tableQueueSto),// the depth of the event queue
+        l_tableStk,            // the stack of the acitve object (optional)
+        sizeof(l_tableStk),    // the size of the stack in bytes (optional)
+        &amp;ie);                  // initialization event (optional)
+    . . .
+}</code>
+   </operation>
+   <operation name="postFIFO" type="void" visibility="0x00" properties="0x00">
+    <documentation>Posts an event e directly to the event queue of the acitve object me using the First-In-First-Out (FIFO) policy.
+
+Direct event posting is the simplest asynchronous communication method available in QP.
+
+NOTE: Direct event posting should not be confused with direct event dispatching. In contrast to asynchronous event posting through event queues, direct event dispatching is synchronous. Direct event dispatching occurs when you call QHsm::dispatch() or QFsm::dispatch() function.</documentation>
+    <parameter name="e" type="QEvt const *"/>
+    <code>// Example:
+
+extern QActive *AO_Table;
+
+. . .
+pe = Q_NEW(TableEvt, HUNGRY_SIG); // dynamically allocate event
+pe-&gt;philNum = me-&gt;num;
+
+AO_Table-&gt;postFIFO(pe); // &lt;==</code>
+   </operation>
+   <operation name="postLIFO" type="void" visibility="0x00" properties="0x00">
+    <documentation>Posts an event e directly to the event queue of the acitve object me using the Last-In-First-Out (LIFO) policy.
+
+Direct event posting is the simplest asynchronous communication method available in QP.
+
+NOTE: You should be very careful with the LIFO (Last In First Out) policy, because it *reverses* the order of events in the queue. Typically, the QActive_postLIFO() operation shuould be only used for self-posting of events as reminders (see the &quot;Reminder&quot; state pattern) for continuing a processing. The postLIFO() operation is also used in the QActive::recall() operation.
+
+NOTE: Direct event posting should not be confused with direct event dispatching. In contrast to asynchronous event posting through event queues, direct event dispatching is synchronous. Direct event dispatching occurs when you call QHsm::dispatch() or QFsm::dispatch() function.</documentation>
+    <parameter name="e" type="QEvt const *"/>
+    <code>// Example:
+. . .
+pe = Q_NEW(TableEvt, HUNGRY_SIG); // dynamically allocate event
+pe-&gt;philNum = me-&gt;num;
+. . .
+me-&gt;postLIFO(pe); // &lt;==</code>
+   </operation>
+  </class>
+  <class name="GuiQMActive" superclass="qpcpp::QMActive">
+   <operation name="GuiQMActive" type="QMActive(initial)" visibility="0x00" properties="0x00">
+    <parameter name="initial" type="QStateHandler"/>
+   </operation>
+   <operation name="start" type="void" visibility="0x00" properties="0x00">
+    <documentation>Starts execution of an active object and registers the object with the framework. This function is strongly OS-dependent and must be defined in the QP port to a particular platform.
+
+The function takes six arguments:
+
+'prio' is the priority of the active object. QP allows you to start up to 63 active objects, each one having a *unique* priority number between 1 and 63 inclusive, where higher numerical values correspond to higher priority (urgency) of the active object relative to the others.
+
+'qSto[]' and 'qLen' arguments are the storage and size of the event queue used by this active object.
+
+'stkSto' and 'stkSize' are the stack storage and size in bytes. Please note that a per-active object stack is used only when the underlying OS requies it. If the stack is not required, or the underlying OS allocates the stack internally, the stkSto should be NULL and/or stkSize should be 0.
+
+'ie' is an optional initialization event that can be used to pass additional startup data to the active object. (Pass NULL if your active object does not expect the initialization event).</documentation>
+    <parameter name="prio" type="uint8_t"/>
+    <parameter name="qSto[]" type="QEvt const *"/>
+    <parameter name="qLen" type="uint32_t"/>
+    <parameter name="stkSto" type="void *"/>
+    <parameter name="stkSize" type="uint32_t"/>
+    <parameter name="ie" type="QEvt const *"/>
+    <code>// Example:
+
+static Table l_table;   // Table active object instance
+static QEvt const *l_tableQueueSto[N]; // storage for Table queue
+static int l_tableStk[256]; // storage for the stack for Table AO
+. . .
+int main() {
+    TableEvt ie;            // initialization event for the Table AO
+    . . .
+    ie.philNum = n;         // build the initialization event
+    . . .
+    l_table.start(
+        6,                     // unique priority (1..QF_MAX_ACTIVE)
+        l_tableQueueSto,       // event queue of the active object
+        Q_DIM(l_tableQueueSto),// the depth of the event queue
+        l_tableStk,            // the stack of the acitve object (optional)
+        sizeof(l_tableStk),    // the size of the stack in bytes (optional)
+        &amp;ie);                  // initialization event (optional)
+    . . .
+}</code>
+   </operation>
+   <operation name="postFIFO" type="void" visibility="0x00" properties="0x00">
+    <documentation>Posts an event e directly to the event queue of the acitve object me using the First-In-First-Out (FIFO) policy.
+
+Direct event posting is the simplest asynchronous communication method available in QP.
+
+NOTE: Direct event posting should not be confused with direct event dispatching. In contrast to asynchronous event posting through event queues, direct event dispatching is synchronous. Direct event dispatching occurs when you call QHsm::dispatch() or QFsm::dispatch() function.</documentation>
+    <parameter name="e" type="QEvt const *"/>
+    <code>// Example:
+
+extern QActive *AO_Table;
+
+. . .
+pe = Q_NEW(TableEvt, HUNGRY_SIG); // dynamically allocate event
+pe-&gt;philNum = me-&gt;num;
+
+AO_Table-&gt;postFIFO(pe); // &lt;==</code>
+   </operation>
+   <operation name="postLIFO" type="void" visibility="0x00" properties="0x00">
+    <documentation>Posts an event e directly to the event queue of the acitve object me using the Last-In-First-Out (LIFO) policy.
+
+Direct event posting is the simplest asynchronous communication method available in QP.
+
+NOTE: You should be very careful with the LIFO (Last In First Out) policy, because it *reverses* the order of events in the queue. Typically, the QActive_postLIFO() operation shuould be only used for self-posting of events as reminders (see the &quot;Reminder&quot; state pattern) for continuing a processing. The postLIFO() operation is also used in the QActive::recall() operation.
+
+NOTE: Direct event posting should not be confused with direct event dispatching. In contrast to asynchronous event posting through event queues, direct event dispatching is synchronous. Direct event dispatching occurs when you call QHsm::dispatch() or QFsm::dispatch() function.</documentation>
+    <parameter name="e" type="QEvt const *"/>
+    <code>// Example:
+. . .
+pe = Q_NEW(TableEvt, HUNGRY_SIG); // dynamically allocate event
+pe-&gt;philNum = me-&gt;num;
+. . .
+me-&gt;postLIFO(pe); // &lt;==</code>
+   </operation>
+  </class>
+ </package>
+ <package name="components" stereotype="0x02" namespace="rabbit::">
+  <class name="Pelican" superclass="Qt-port::GuiQMActive">
+   <documentation>PEdestrian LIght CONtrolled (PELICAN) crossing</documentation>
+   <attribute name="m_timeout" type="QP::QTimeEvt" visibility="0x02" properties="0x00"/>
+   <attribute name="m_flashCtr" type="uint8_t" visibility="0x02" properties="0x00"/>
+   <attribute name="serial" type="QSerialPort" visibility="0x00" properties="0x00"/>
+   <operation name="Pelican" type="" visibility="0x00" properties="0x02">
+    <documentation>constructor</documentation>
+    <code> : GuiQMActive(Q_STATE_CAST(&amp;Pelican::initial)),
+   m_timeout(TIMEOUT_SIG)</code>
+   </operation>
+   <operation name="port_init" type="bool" visibility="0x00" properties="0x00">
+    <code>//qDebug(&quot;===========================&quot;);
+//me-&gt;serial.close();
+serial.setPortName(Gui::instance-&gt;portName());
+serial.setBaudRate(Gui::instance-&gt;baudrate());
+serial.setDataBits(Gui::instance-&gt;data_bits());
+serial.setStopBits(Gui::instance-&gt;stop_bits());
+serial.setParity(Gui::instance-&gt;parity());
+
+return !serial.open(QIODevice::ReadWrite);
+//bool res = me-&gt;serial.open(QIODevice::ReadWrite);</code>
+   </operation>
+   <statechart>
+    <initial target="../1/1">
+     <action>QS_OBJ_DICTIONARY(&amp;l_Pelican);
+QS_OBJ_DICTIONARY(&amp;l_Pelican.serial);
+
+QS_FUN_DICTIONARY(&amp;Pelican::initial);
+QS_FUN_DICTIONARY(&amp;Pelican::active);
+QS_FUN_DICTIONARY(&amp;Pelican::final);
+QS_FUN_DICTIONARY(&amp;Pelican::setup);
+QS_FUN_DICTIONARY(&amp;Pelican::running);
+
+QS_SIG_DICTIONARY(TERMINATE_SIG, &amp;l_Pelican);
+QS_SIG_DICTIONARY(PORT_INIT_SIG, &amp;l_Pelican);
+QS_SIG_DICTIONARY(RUNNING_SIG,   &amp;l_Pelican);
+QS_SIG_DICTIONARY(AUTOSEND_SIG,  &amp;l_Pelican);
+QS_SIG_DICTIONARY(SEND_SIG,      &amp;l_Pelican);
+QS_SIG_DICTIONARY(STOP_SIG,      &amp;l_Pelican);
+QS_SIG_DICTIONARY(STOP_RECEIVE_SIG, &amp;l_Pelican);
+
+me-&gt;subscribe(TERMINATE_SIG);
+me-&gt;subscribe(PORT_INIT_SIG);
+me-&gt;subscribe(RUNNING_SIG);
+me-&gt;subscribe(AUTOSEND_SIG);
+me-&gt;subscribe(SEND_SIG);
+me-&gt;subscribe(STOP_SIG);
+me-&gt;subscribe(STOP_RECEIVE_SIG);</action>
+     <initial_glyph conn="2,10,5,1,28,14,-2">
+      <action box="0,-2,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="active">
+     <tran trig="TERMINATE" target="../../2">
+      <tran_glyph conn="2,17,3,1,34,79,-8">
+       <action box="0,-2,25,2"/>
+      </tran_glyph>
+     </tran>
+     <state name="setup">
+      <tran trig="PORT_INIT">
+       <action>bool res = me-&gt;port_init();</action>
+       <choice>
+        <guard>else</guard>
+        <choice_glyph conn="18,31,5,-1,8">
+         <action box="1,0,10,2"/>
+        </choice_glyph>
+       </choice>
+       <choice>
+        <guard>res == 0</guard>
+        <action>static QP::QEvt const e(PELICAN::RUNNING_SIG);
+QP::QF::PUBLISH(&amp;e, me);</action>
+        <choice_glyph conn="18,31,4,-1,-3,8">
+         <action box="0,-5,10,2"/>
+        </choice_glyph>
+       </choice>
+       <tran_glyph conn="4,31,3,-1,14">
+        <action box="0,-2,12,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="RUNNING" target="../../2">
+       <tran_glyph conn="4,34,3,1,26,18,-2">
+        <action box="0,-2,10,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="4,22,24,26"/>
+     </state>
+     <state name="running">
+      <entry>Gui::instance-&gt;setPortState(0);</entry>
+      <exit>Gui::instance-&gt;setPortState(1);</exit>
+      <tran trig="AUTOSEND">
+       <tran_glyph conn="4,58,3,-1,14">
+        <action box="0,-2,10,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="SEND">
+       <tran_glyph conn="4,61,3,-1,14">
+        <action box="0,-2,10,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="STOP_RECEIVE">
+       <tran_glyph conn="4,64,3,-1,14">
+        <action box="0,-2,10,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="PORT_INIT" target="../../1">
+       <action>me-&gt;serial.close();</action>
+       <tran_glyph conn="4,70,3,1,28,-44,-4">
+        <action box="0,-2,10,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="4,50,24,28">
+       <entry box="1,2,6,2"/>
+       <exit box="1,4,6,2"/>
+      </state_glyph>
+     </state>
+     <state_glyph node="2,12,32,80"/>
+    </state>
+    <state name="final">
+     <entry>BSP_terminate(0);</entry>
+     <state_glyph node="2,94,26,6">
+      <entry box="1,2,6,2"/>
+     </state_glyph>
+    </state>
+    <state_diagram size="110,104"/>
+   </statechart>
+  </class>
+  <attribute name="AO_Pelican" type="QP::QActive * const" visibility="0x00" properties="0x00"/>
+ </package>
+ <directory name=".">
+  <file name="rabbit.h" codec="UTF-8">
+   <text>#ifndef pelican_h
+#define pelican_h
+
+namespace rabbit {
+
+enum PelicanSignals {
+    PORT_INIT_SIG = QP::Q_USER_SIG,
+    TERMINATE_SIG,
+    RUNNING_SIG,
+    AUTOSEND_SIG,
+    SEND_SIG,
+    STOP_RECEIVE_SIG,
+    STOP_SIG,
+
+    MAX_PUB_SIG, // the last published signal
+
+    ON_SIG,
+    OFF_SIG,
+    TIMEOUT_SIG,
+
+    MAX_SIG   // keep always last
+};
+
+} // namespace PELICAN
+
+// active objects ..................................................
+$declare(components::AO_Pelican)  // opaque pointer to Pelican AO
+
+#endif // pelican_h</text>
+  </file>
+  <file name="rabbit.cpp" codec="UTF-8">
+   <text>#include &lt;QtSerialPort/QtSerialPort&gt;
+#include &lt;QMessageBox&gt;
+
+#include &quot;qp_port.h&quot;
+#include &quot;bsp.h&quot;
+#include &quot;pelican.h&quot;
+#include &quot;gui.h&quot;
+
+extern Gui* instance;
+
+Q_DEFINE_THIS_FILE
+
+// Pelican class -------------------------------------------------------------
+$declare(components::Pelican)
+
+namespace rabbit {
+
+enum PelicanTimeouts {  // various timeouts in ticks
+    CARS_GREEN_MIN_TOUT = BSP_TICKS_PER_SEC * 8, // min green for cars
+    CARS_YELLOW_TOUT = BSP_TICKS_PER_SEC * 3,  // yellow for cars
+    PEDS_WALK_TOUT   = BSP_TICKS_PER_SEC * 3,  // walking time for peds
+    PEDS_FLASH_TOUT  = BSP_TICKS_PER_SEC / 5,  // flashing timeout for peds
+    PEDS_FLASH_NUM   = 1,                    // number of flashes for peds
+    OFF_FLASH_TOUT   = BSP_TICKS_PER_SEC / 2   // flashing timeout when off
+};
+
+// Local objects -------------------------------------------------------------
+static Pelican l_Pelican; // the single instance of Pelican active object
+
+// Global objects ------------------------------------------------------------
+QP::QActive * const AO_Pelican = &amp;l_Pelican; // the opaque pointer
+
+} // namespace PELICAN
+
+// Pelican class definition --------------------------------------------------
+$define(components::Pelican)</text>
+  </file>
+ </directory>
+</model>

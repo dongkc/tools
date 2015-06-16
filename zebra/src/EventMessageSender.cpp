@@ -7,7 +7,7 @@ using namespace cms;
 
   //:brokerURI("tcp://172.18.27.154:61616"),
 EventMessageSender::EventMessageSender()
-  :brokerURI("tcp://192.168.27.13:61616"),
+  :brokerURI("tcp://192.168.27.21:61616"),
    useTopic(true),
    sessionTransacted(false),
    destName("nuctech.responseTopic"),
