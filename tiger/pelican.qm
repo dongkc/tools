@@ -449,6 +449,7 @@ QS_OBJ_DICTIONARY(&amp;g_net_mgr.m_timeout);
   <attribute name="AO_Pelican" type="QP::QMActive * const" visibility="0x00" properties="0x00"/>
   <attribute name="AO_net_mgr" type="QP::QMActive * const" visibility="0x00" properties="0x00"/>
  </package>
+ <package name="Events" stereotype="0x01" namespace="PELICAN::"/>
  <directory name=".">
   <file name="pelican.h" codec="UTF-8">
    <text>#ifndef pelican_h
