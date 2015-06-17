@@ -421,6 +421,7 @@ BSP_signalPeds(PEDS_BLANK);</action>
    <attribute name="socket" type="std::unique_ptr&lt;Poco::Net::ServerSocket&gt;" visibility="0x02" properties="0x00"/>
    <attribute name="reactor" type="std::unique_ptr&lt;Poco::Net::SocketReactor&gt;" visibility="0x02" properties="0x00"/>
    <attribute name="acceptor" type="std::unique_ptr&lt;Poco::Net::SocketAcceptor&lt;NetworkHandler&gt;&gt;" visibility="0x02" properties="0x00"/>
+   <attribute name="io_thread" type="Poco::Thread" visibility="0x02" properties="0x00"/>
    <operation name="NetMgr" type="" visibility="0x00" properties="0x02">
     <code> : QMActive(Q_STATE_CAST(&amp;NetMgr::initial)),
    m_timeout(this, TIMEOUT_SIG)</code>
@@ -439,7 +440,12 @@ QS_OBJ_DICTIONARY(&amp;g_net_mgr.m_timeout);
 me-&gt;socket = make_unique&lt;ServerSocket&gt;(9000);
 me-&gt;reactor = make_unique&lt;SocketReactor&gt;(Timespan(0,0,0,1,0));
 me-&gt;acceptor = make_unique&lt;
-    SocketAcceptor&lt;NetworkHandler&gt;&gt;(*me-&gt;socket.get(), *me-&gt;reactor.get());</entry>
+    SocketAcceptor&lt;NetworkHandler&gt;&gt;(*me-&gt;socket.get(), *me-&gt;reactor.get());
+
+me-&gt;io_thread.start(*me-&gt;reactor.get());</entry>
+     <exit>me-&gt;reactor-&gt;stop();
+me-&gt;io_thread.join();
+qDebug(&quot;=================================&quot;);</exit>
      <tran trig="TIMEOUT">
       <action>qDebug(&quot;-----------------&quot;);</action>
       <tran_glyph conn="2,12,3,-1,32">
@@ -448,6 +454,7 @@ me-&gt;acceptor = make_unique&lt;
      </tran>
      <state_glyph node="2,6,38,50">
       <entry box="1,2,6,2"/>
+      <exit box="1,4,6,2"/>
      </state_glyph>
     </state>
     <state_diagram size="88,59"/>
