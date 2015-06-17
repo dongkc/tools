@@ -43,8 +43,6 @@ DEFINES += QT_NO_STATEMACHINE
 INCLUDEPATH = . \
     $(QPCPP)/include \
     $(QPCPP)/ports/qt \
-    ../../poco-1.6.0/Foundation/include \
-    ../../poco-1.6.0/Net/include
 
 SOURCES += \
     main.cpp \
@@ -69,13 +67,13 @@ CONFIG(debug, debug|release) {
     SOURCES += $(QTOOLS)/qspy/source/qspy.c
     HEADERS += qs_port.h
     LIBS += -L$(QPCPP)/ports/qt/mingw/debug
-    LIBS += -LE:/project/poco-1.6.0/lib/
 } else {
     LIBS += -L$(QPCPP)/ports/qt/mingw/release
 }
 
+CONFIG += c++11
 LIBS += -lqp -lPocoFoundationd -lPocoNetd
-    
+
 RESOURCES = gui.qrc
 
 win32:RC_FILE = gui.rc
