@@ -34,7 +34,7 @@
 #-----------------------------------------------------------------------------
 TEMPLATE = app
 
-QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++14
 
 QT      += core gui widgets
 TARGET   = pelican-gui
@@ -71,7 +71,7 @@ CONFIG(debug, debug|release) {
     LIBS += -L$(QPCPP)/ports/qt/mingw/release
 }
 
-CONFIG += c++11
+CONFIG += c++14
 LIBS += -lqp -lPocoFoundationd -lPocoNetd
 
 RESOURCES = gui.qrc
