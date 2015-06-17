@@ -438,8 +438,8 @@ QS_OBJ_DICTIONARY(&amp;g_net_mgr.m_timeout);
      <entry>me-&gt;m_timeout.armX(BSP_TICKS_PER_SEC, BSP_TICKS_PER_SEC);
 me-&gt;socket = make_unique&lt;ServerSocket&gt;(9000);
 me-&gt;reactor = make_unique&lt;SocketReactor&gt;(Timespan(0,0,0,1,0));
-me-&gt;acceptor.reset(
-    new SocketAcceptor&lt;NetworkHandler&gt;(*me-&gt;socket.get(), *me-&gt;reactor.get()));</entry>
+me-&gt;acceptor = make_unique&lt;
+    SocketAcceptor&lt;NetworkHandler&gt;&gt;(*me-&gt;socket.get(), *me-&gt;reactor.get());</entry>
      <tran trig="TIMEOUT">
       <action>qDebug(&quot;-----------------&quot;);</action>
       <tran_glyph conn="2,12,3,-1,32">
