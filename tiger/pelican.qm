@@ -418,6 +418,9 @@ BSP_signalPeds(PEDS_BLANK);</action>
   </class>
   <class name="NetMgr" superclass="qpcpp::QMActive">
    <attribute name="m_timeout" type="QP::QTimeEvt" visibility="0x02" properties="0x00"/>
+   <attribute name="socket" type="std::unique_ptr&lt;Poco::Net::ServerSocket&gt;" visibility="0x02" properties="0x00"/>
+   <attribute name="reactor" type="std::unique_ptr&lt;Poco::Net::SocketReactor&gt;" visibility="0x02" properties="0x00"/>
+   <attribute name="acceptor" type="std::unique_ptr&lt;Poco::Net::SocketAcceptor&lt;NetworkHandler&gt;&gt;" visibility="0x02" properties="0x00"/>
    <operation name="NetMgr" type="" visibility="0x00" properties="0x02">
     <code> : QMActive(Q_STATE_CAST(&amp;NetMgr::initial)),
    m_timeout(this, TIMEOUT_SIG)</code>
@@ -502,6 +505,9 @@ $define(components::Pelican)</text>
    <text>#ifndef NET_MGR_H
 #define NET_MGR_H
 
+#include &lt;memory&gt;
+#include &quot;network_handler.h&quot;
+
 $declare(components::AO_net_mgr)
 #endif</text>
   </file>
@@ -531,6 +537,7 @@ $define(components::NetMgr)</text>
   <file name="common.h" codec="UTF-8">
    <text>#ifndef COMMON_H
 #define COMMON_H
+#include &quot;qp_port.h&quot;
 
 namespace PELICAN {
 

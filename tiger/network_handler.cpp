@@ -11,60 +11,53 @@
 #include <Poco/Net/SocketAcceptor.h>
 #include <Poco/Net/SocketNotification.h>
 
+#include "common.h"
+#include "net_mgr.h"
+
 using namespace std;
 using namespace Poco;
 using namespace Poco::Net;
 
-class ServiceHandler
+NetworkHandler::NetworkHandler(StreamSocket socket, SocketReactor& reactor) : _socket(socket), _reactor(reactor)
 {
-public:
+  _reactor.addEventHandler(_socket, NObserver<NetworkHandler, ReadableNotification>(*this, &NetworkHandler::onReadable));
+  _reactor.addEventHandler(_socket, NObserver<NetworkHandler, WritableNotification>(*this, &NetworkHandler::onWritable));
+}
 
-  ServiceHandler(StreamSocket socket, SocketReactor& reactor) : _socket(socket), _reactor(reactor)
+void NetworkHandler::onReadable(const AutoPtr<ReadableNotification>& notification)
+{
+  char buf[1500];
+  int no = _socket.receiveBytes(buf, 1500);
+  if (no > 0)
   {
-    _reactor.addEventHandler(_socket, NObserver<ServiceHandler, ReadableNotification>(*this, &ServiceHandler::onReadable));
-    _reactor.addEventHandler(_socket, NObserver<ServiceHandler, WritableNotification>(*this, &ServiceHandler::onWritable));
+    buf[no] = '\0';
+    _request = buf;
   }
-
-  void onReadable(const AutoPtr<ReadableNotification>& notification)
+  else
   {
-    char buf[1500];
-    int no = _socket.receiveBytes(buf, 1500);
-    if (no > 0)
-    {
-      buf[no] = '\0';
-      _request = buf;
-    }
-    else
-    {
-      // destroy handlers
-      _reactor.removeEventHandler(_socket, NObserver<ServiceHandler, ReadableNotification>(*this, &ServiceHandler::onReadable));
-      _reactor.removeEventHandler(_socket, NObserver<ServiceHandler, WritableNotification>(*this, &ServiceHandler::onWritable));
-      _socket.close();
-      delete this;
-    }
+    // destroy handlers
+    _reactor.removeEventHandler(_socket, NObserver<NetworkHandler, ReadableNotification>(*this, &NetworkHandler::onReadable));
+    _reactor.removeEventHandler(_socket, NObserver<NetworkHandler, WritableNotification>(*this, &NetworkHandler::onWritable));
+    _socket.close();
+    delete this;
   }
+}
 
-  void onWritable(const AutoPtr<WritableNotification>& notification)
+void NetworkHandler::onWritable(const AutoPtr<WritableNotification>& notification)
+{
+  if (!_request.empty())
   {
-    if (!_request.empty())
-    {
-      _socket.sendBytes(_request.c_str(), _request.length());
-      _request.clear();
-    }
+    _socket.sendBytes(_request.c_str(), _request.length());
+    _request.clear();
   }
-
-private:
-  StreamSocket _socket;
-  SocketReactor& _reactor;
-  string _request;
-};
+}
 
 #if 0
 int main()
 {
   ServerSocket socket(9000);
   SocketReactor reactor(Timespan(0, 0, 0, 1, 0));
-  SocketAcceptor<ServiceHandler> acceptor(socket, reactor);
+  SocketAcceptor<NetworkHandler> acceptor(socket, reactor);
 
   Thread thread;
   thread.start(reactor);

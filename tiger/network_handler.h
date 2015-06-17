@@ -4,8 +4,10 @@
 #include <string>
 
 #include <Poco/NObserver.h>
-#include <Poco/Net/SocketReactor.h>
 #include <Poco/Net/StreamSocket.h>
+#include <Poco/Net/ServerSocket.h>
+#include <Poco/Net/SocketReactor.h>
+#include <Poco/Net/SocketAcceptor.h>
 #include <Poco/Net/SocketNotification.h>
 
 class NetworkHandler

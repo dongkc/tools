@@ -34,6 +34,8 @@
 #-----------------------------------------------------------------------------
 TEMPLATE = app
 
+QMAKE_CXXFLAGS += -std=c++11
+
 QT      += core gui widgets
 TARGET   = pelican-gui
 DEFINES += QT_NO_STATEMACHINE

@@ -17,6 +17,7 @@
 //${.::common.h} .............................................................
 #ifndef COMMON_H
 #define COMMON_H
+#include "qp_port.h"
 
 namespace PELICAN {
 
